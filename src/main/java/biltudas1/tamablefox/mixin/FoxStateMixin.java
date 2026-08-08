@@ -1,0 +1,88 @@
+package biltudas1.tamablefox.mixin;
+
+import biltudas1.tamablefox.TamableFox;
+import biltudas1.tamablefox.state.FoxState;
+import biltudas1.tamablefox.state.FoxStateAccessor;
+import net.minecraft.world.entity.animal.fox.Fox;
+
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+@Mixin(Fox.class)
+public class FoxStateMixin implements FoxStateAccessor {
+
+    @Unique
+    private FoxState tamableFox$state = FoxState.FOLLOW;
+
+    @Override
+    public FoxState tamableFox$getState() {
+        return tamableFox$state;
+    }
+
+    @Override
+    public void tamableFox$setState(FoxState state) {
+        this.tamableFox$state = state;
+    }
+
+    @Inject(
+        method = "tick",
+        at = @At("TAIL")
+    )
+    private void debugGuardState(CallbackInfo ci) {
+        Fox fox = (Fox)(Object)this;
+
+        if (tamableFox$state == FoxState.GUARD && !fox.isSitting()) {
+            TamableFox.LOGGER.info(
+                "GUARD fox is standing! sitting={}, sleeping={}",
+                fox.isSitting(),
+                fox.isSleeping()
+            );
+        }
+    }
+
+    @Inject(
+        method = "setSitting",
+        at = @At("HEAD")
+    )
+    private void debugSetSitting(
+            boolean value,
+            CallbackInfo ci
+    ) {
+        TamableFox.LOGGER.warn(
+            "setSitting({}) state={}",
+            value,
+            tamableFox$state,
+            new RuntimeException("Stack Trace")
+        );
+
+        if (
+            !value &&
+            tamableFox$state == FoxState.GUARD
+        ) {
+            tamableFox$state = FoxState.FOLLOW;
+        }
+    }
+
+    
+    @Inject(
+        method = "clearStates",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void preventClearStatesWhileGuard(
+            CallbackInfo ci
+    ) {
+        if (((FoxStateAccessor)this)
+                .tamableFox$getState() == FoxState.GUARD) {
+
+            TamableFox.LOGGER.info(
+                "Blocked clearStates() while GUARD"
+            );
+
+            ci.cancel();
+        }
+    }
+}

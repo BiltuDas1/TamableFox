@@ -1,0 +1,29 @@
+{
+	"schemaVersion": 1,
+	"id": "tamable-fox",
+	"version": "${version}",
+	"name": "Tamable Fox",
+	"description": "Fabric Mod allows Player to tame a fox",
+	"authors": [
+		"BiltuDas1"
+	],
+	"contact": {
+	},
+	"license": "MIT",
+	"icon": "assets/tamable-fox/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"biltudas1.tamablefox.TamableFox"
+		]
+	},
+	"mixins": [
+		"tamable-fox.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
