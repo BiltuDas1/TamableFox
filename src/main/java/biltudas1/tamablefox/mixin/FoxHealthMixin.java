@@ -46,9 +46,20 @@ public abstract class FoxHealthMixin {
                 ).setBaseValue(60.0D);
 
                 fox.setHealth(60.0F);
-
-                tamableFox$healthApplied = true;
             }
+
+            if (
+                fox.getAttribute(
+                    Attributes.ATTACK_DAMAGE
+                ) != null
+            ) {
+
+                fox.getAttribute(
+                    Attributes.ATTACK_DAMAGE
+                ).setBaseValue(6.0D);
+            }
+
+            tamableFox$healthApplied = true;
         }
     }
 }
