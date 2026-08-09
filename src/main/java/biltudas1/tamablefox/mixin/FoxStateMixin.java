@@ -112,6 +112,24 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
             tamableFox$state.name()
         );
 
+        if (tamableFox$guardPos != null) {
+
+            output.putInt(
+                "TamableFoxGuardX",
+                tamableFox$guardPos.getX()
+            );
+
+            output.putInt(
+                "TamableFoxGuardY",
+                tamableFox$guardPos.getY()
+            );
+
+            output.putInt(
+                "TamableFoxGuardZ",
+                tamableFox$guardPos.getZ()
+            );
+        }
+
         TamableFox.LOGGER.info(
             "Saved fox state {}",
             tamableFox$state
@@ -147,5 +165,29 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
                         FoxState.FOLLOW;
                 }
             });
+
+        if (
+            input.getInt("TamableFoxGuardX").isPresent()
+            && input.getInt("TamableFoxGuardY").isPresent()
+            && input.getInt("TamableFoxGuardZ").isPresent()
+        ) {
+
+            int x =
+                input.getInt("TamableFoxGuardX").get();
+
+            int y =
+                input.getInt("TamableFoxGuardY").get();
+
+            int z =
+                input.getInt("TamableFoxGuardZ").get();
+
+            tamableFox$guardPos =
+                new BlockPos(x, y, z);
+
+            TamableFox.LOGGER.info(
+                "Loaded guard position {}",
+                tamableFox$guardPos
+            );
+        }
     }
 }

@@ -28,6 +28,11 @@ public class ProtectOwnerGoal extends Goal {
     @Override
     public boolean canUse() {
 
+        if (((FoxStateAccessor) fox)
+                .tamableFox$getState() != FoxState.GUARD) {
+            return false;
+        }
+
         ServerPlayer owner = getTrustedPlayer();
 
         if (owner == null) {

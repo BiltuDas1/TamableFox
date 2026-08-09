@@ -86,6 +86,14 @@ public class ReturnToGuardGoal extends Goal {
 
             fox.getNavigation().stop();
 
+            fox.setTarget(null);
+            
+            fox.setDeltaMovement(
+                0.0D,
+                0.0D,
+                0.0D
+            );
+
             fox.setSitting(true);
         }
     }
