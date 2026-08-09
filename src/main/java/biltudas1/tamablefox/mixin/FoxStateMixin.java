@@ -1,15 +1,17 @@
 package biltudas1.tamablefox.mixin;
 
-import biltudas1.tamablefox.TamableFox;
-import biltudas1.tamablefox.state.FoxState;
-import biltudas1.tamablefox.state.FoxStateAccessor;
-import net.minecraft.world.entity.animal.fox.Fox;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import biltudas1.tamablefox.TamableFox;
+import biltudas1.tamablefox.state.FoxState;
+import biltudas1.tamablefox.state.FoxStateAccessor;
+import net.minecraft.world.entity.animal.fox.Fox;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 @Mixin(Fox.class)
 public class FoxStateMixin implements FoxStateAccessor {
@@ -84,5 +86,55 @@ public class FoxStateMixin implements FoxStateAccessor {
 
             ci.cancel();
         }
+    }
+
+    @Inject(
+        method = "addAdditionalSaveData",
+        at = @At("TAIL")
+    )
+    private void saveFoxState(
+            ValueOutput output,
+            CallbackInfo ci
+    ) {
+        output.putString(
+            "TamableFoxState",
+            tamableFox$state.name()
+        );
+
+        TamableFox.LOGGER.info(
+            "Saved fox state {}",
+            tamableFox$state
+        );
+    }
+
+    @Inject(
+        method = "readAdditionalSaveData",
+        at = @At("TAIL")
+    )
+    private void loadFoxState(
+            ValueInput input,
+            CallbackInfo ci
+    ) {
+        input.getString("TamableFoxState")
+            .ifPresent(stateName -> {
+
+                try {
+
+                    tamableFox$state =
+                        FoxState.valueOf(stateName);
+
+                    TamableFox.LOGGER.info(
+                        "Loaded fox state {}",
+                        tamableFox$state
+                    );
+
+                } catch (
+                    IllegalArgumentException e
+                ) {
+
+                    tamableFox$state =
+                        FoxState.FOLLOW;
+                }
+            });
     }
 }
