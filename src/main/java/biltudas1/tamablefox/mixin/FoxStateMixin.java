@@ -9,15 +9,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import biltudas1.tamablefox.TamableFox;
 import biltudas1.tamablefox.state.FoxState;
 import biltudas1.tamablefox.state.FoxStateAccessor;
+import biltudas1.tamablefox.state.GuardPositionAccessor;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.animal.fox.Fox;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 @Mixin(Fox.class)
-public class FoxStateMixin implements FoxStateAccessor {
+public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
 
     @Unique
     private FoxState tamableFox$state = FoxState.FOLLOW;
+
+    @Unique
+    private BlockPos tamableFox$guardPos;
 
     @Override
     public FoxState tamableFox$getState() {
@@ -27,6 +32,18 @@ public class FoxStateMixin implements FoxStateAccessor {
     @Override
     public void tamableFox$setState(FoxState state) {
         this.tamableFox$state = state;
+    }
+
+    @Override
+    public BlockPos tamableFox$getGuardPos() {
+        return tamableFox$guardPos;
+    }
+
+    @Override
+    public void tamableFox$setGuardPos(
+            BlockPos pos
+    ) {
+        tamableFox$guardPos = pos;
     }
 
     @Inject(
@@ -60,12 +77,6 @@ public class FoxStateMixin implements FoxStateAccessor {
             new RuntimeException("Stack Trace")
         );
 
-        if (
-            !value &&
-            tamableFox$state == FoxState.GUARD
-        ) {
-            tamableFox$state = FoxState.FOLLOW;
-        }
     }
 
     

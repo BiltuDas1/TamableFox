@@ -79,8 +79,8 @@ public class ProtectOwnerGoal extends Goal {
 
                 ((FoxStateAccessor) fox)
                     .tamableFox$setState(
-                        FoxState.FOLLOW
-                    );
+                        FoxState.COMBAT
+                );
 
                 fox.setSitting(false);
 
@@ -110,5 +110,15 @@ public class ProtectOwnerGoal extends Goal {
         .map(entity -> (ServerPlayer) entity)
         .findFirst()
         .orElse(null);
+    }
+
+    @Override
+    public void stop() {
+        fox.setTarget(null);
+
+        ((FoxStateAccessor) fox)
+            .tamableFox$setState(
+                FoxState.GUARD
+        );
     }
 }

@@ -41,9 +41,10 @@ public class FollowOwnerGoal extends Goal {
       .orElse(null);
   }
 
-  private boolean isGuarding() {
+  private boolean isFollowing() {
       return ((FoxStateAccessor) fox)
-          .tamableFox$getState() == FoxState.GUARD;
+          .tamableFox$getState()
+          == FoxState.FOLLOW;
   }
 
   private boolean tryTeleportNearPlayer(
@@ -116,7 +117,7 @@ public class FollowOwnerGoal extends Goal {
   @Override
   public boolean canUse() {
 
-    if (this.isGuarding()) {
+    if (!this.isFollowing()) {
       return false;
     }
 
@@ -131,7 +132,7 @@ public class FollowOwnerGoal extends Goal {
   @Override
   public boolean canContinueToUse() {
 
-    if (this.isGuarding()) {
+    if (!this.isFollowing()) {
       return false;
     }
 
@@ -146,7 +147,7 @@ public class FollowOwnerGoal extends Goal {
   @Override
   public void tick() {
 
-    if (this.isGuarding()) {
+    if (!this.isFollowing()) {
         fox.getNavigation().stop();
         return;
     }

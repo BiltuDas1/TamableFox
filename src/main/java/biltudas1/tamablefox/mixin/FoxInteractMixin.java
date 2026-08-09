@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import biltudas1.tamablefox.TamableFox;
 import biltudas1.tamablefox.state.FoxState;
 import biltudas1.tamablefox.state.FoxStateAccessor;
+import biltudas1.tamablefox.state.GuardPositionAccessor;
 
 @Mixin(Mob.class)
 public abstract class FoxInteractMixin {
@@ -49,7 +50,14 @@ public abstract class FoxInteractMixin {
 
             if (stateAccessor.tamableFox$getState() == FoxState.FOLLOW) {
 
-                stateAccessor.tamableFox$setState(FoxState.GUARD);
+                stateAccessor.tamableFox$setState(
+                    FoxState.GUARD
+                );
+
+                ((GuardPositionAccessor) fox)
+                    .tamableFox$setGuardPos(
+                        fox.blockPosition()
+                    );
 
                 fox.setSitting(true); // visual only
                 fox.getNavigation().stop();

@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import biltudas1.tamablefox.ai.FollowOwnerGoal;
 import biltudas1.tamablefox.goal.ProtectOwnerGoal;
+import biltudas1.tamablefox.goal.ReturnToGuardGoal;
 import net.minecraft.world.entity.ai.goal.GoalSelector;
 import net.minecraft.world.entity.animal.fox.Fox;
 
@@ -36,6 +37,11 @@ public abstract class FoxGoalMixin {
         goalSelector.addGoal(
                 2,
                 new ProtectOwnerGoal(fox, 32.0D)
+        );
+
+        goalSelector.addGoal(
+                3,
+                new ReturnToGuardGoal(fox)
         );
 
         goalSelector.addGoal(
