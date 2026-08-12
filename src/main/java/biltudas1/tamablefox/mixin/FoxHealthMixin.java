@@ -1,6 +1,7 @@
 package biltudas1.tamablefox.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -10,6 +11,9 @@ import net.minecraft.world.entity.animal.fox.Fox;
 
 @Mixin(Fox.class)
 public abstract class FoxHealthMixin {
+
+    @Unique
+    private boolean tamableFox$huntGoalsRemoved = false;
 
     @Inject(
         method = "tick",
@@ -25,6 +29,35 @@ public abstract class FoxHealthMixin {
                 .invokeGetTrustedEntities()
                 .findAny()
                 .isPresent();
+
+        if (
+            trusted
+            && !tamableFox$huntGoalsRemoved
+        ) {
+
+            FoxGoalAccessor goals =
+                (FoxGoalAccessor) fox;
+
+            ((MobAccessor) fox)
+                .getTargetSelector()
+                .removeGoal(
+                    goals.tamableFox$getLandTargetGoal()
+                );
+
+            ((MobAccessor) fox)
+                .getTargetSelector()
+                .removeGoal(
+                    goals.tamableFox$getTurtleEggTargetGoal()
+                );
+
+            ((MobAccessor) fox)
+                .getTargetSelector()
+                .removeGoal(
+                    goals.tamableFox$getFishTargetGoal()
+                );
+
+            tamableFox$huntGoalsRemoved = true;
+        }
 
         if (
             trusted

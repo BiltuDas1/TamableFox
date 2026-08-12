@@ -12,4 +12,6 @@ public interface MobAccessor {
   @Accessor("goalSelector")
   GoalSelector getGoalSelector();
 
+  @Accessor("targetSelector")
+  GoalSelector getTargetSelector();
 }

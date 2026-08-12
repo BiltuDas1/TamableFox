@@ -1,5 +1,6 @@
 package biltudas1.tamablefox.mixin;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityReference;
@@ -52,6 +53,8 @@ public abstract class FoxInteractMixin {
             ItemStack handItem =
                 player.getItemInHand(hand);
 
+            boolean isHandItemFood = handItem.get(DataComponents.FOOD) != null;
+
             ItemStack mouthItem =
                 fox.getMainHandItem();
 
@@ -67,10 +70,12 @@ public abstract class FoxInteractMixin {
 
                 handItem.shrink(1);
 
-                ((TrustedPlayerAccessor) fox)
-                    .tamableFox$setTrustedPlayer(
-                        player.getUUID()
-                    );
+                if (!isHandItemFood) {
+                    ((TrustedPlayerAccessor) fox)
+                        .tamableFox$setTrustedPlayer(
+                            player.getUUID()
+                        );
+                }
 
                 cir.setReturnValue(
                     InteractionResult.SUCCESS
@@ -100,10 +105,12 @@ public abstract class FoxInteractMixin {
                     ItemStack.EMPTY
                 );
 
-                ((TrustedPlayerAccessor) fox)
-                    .tamableFox$setTrustedPlayer(
-                        null
-                    );
+                if (!isHandItemFood) {
+                    ((TrustedPlayerAccessor) fox)
+                        .tamableFox$setTrustedPlayer(
+                            null
+                        );
+                }
 
                 cir.setReturnValue(
                     InteractionResult.SUCCESS

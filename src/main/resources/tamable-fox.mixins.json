@@ -9,7 +9,9 @@
 		"FoxStateMixin",
     "MobAccessor",
 		"FoxHealthMixin",
-		"FoxDamageMixin"
+		"FoxDamageMixin",
+		"FoxPickupMixin",
+		"FoxGoalAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1
