@@ -1,5 +1,7 @@
 package biltudas1.tamablefox.mixin;
 
+import java.util.UUID;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -10,19 +12,35 @@ import biltudas1.tamablefox.TamableFox;
 import biltudas1.tamablefox.state.FoxState;
 import biltudas1.tamablefox.state.FoxStateAccessor;
 import biltudas1.tamablefox.state.GuardPositionAccessor;
+import biltudas1.tamablefox.state.TrustedPlayerAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.animal.fox.Fox;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
 @Mixin(Fox.class)
-public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
+public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor, TrustedPlayerAccessor {
 
     @Unique
     private FoxState tamableFox$state = FoxState.FOLLOW;
 
     @Unique
     private BlockPos tamableFox$guardPos;
+
+    @Unique
+    private UUID tamableFox$trustedPlayer;
+
+    @Override
+    public UUID tamableFox$getTrustedPlayer() {
+        return tamableFox$trustedPlayer;
+    }
+
+    @Override
+    public void tamableFox$setTrustedPlayer(
+        UUID uuid
+    ) {
+        tamableFox$trustedPlayer = uuid;
+    }
 
     @Override
     public FoxState tamableFox$getState() {
@@ -130,6 +148,17 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
             );
         }
 
+
+        if (
+            tamableFox$trustedPlayer != null
+        ) {
+
+            output.putString(
+                "TamableFoxTrustedPlayer",
+                tamableFox$trustedPlayer.toString()
+            );
+        }
+
         TamableFox.LOGGER.info(
             "Saved fox state {}",
             tamableFox$state
@@ -164,6 +193,15 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor {
                     tamableFox$state =
                         FoxState.FOLLOW;
                 }
+            });
+
+        input.getString("TamableFoxTrustedPlayer")
+            .ifPresent(uuidString -> {
+
+                tamableFox$trustedPlayer =
+                    UUID.fromString(
+                        uuidString
+                    );
             });
 
         if (

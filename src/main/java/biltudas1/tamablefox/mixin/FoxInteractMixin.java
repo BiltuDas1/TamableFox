@@ -3,9 +3,11 @@ package biltudas1.tamablefox.mixin;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityReference;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.fox.Fox;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +18,7 @@ import biltudas1.tamablefox.TamableFox;
 import biltudas1.tamablefox.state.FoxState;
 import biltudas1.tamablefox.state.FoxStateAccessor;
 import biltudas1.tamablefox.state.GuardPositionAccessor;
+import biltudas1.tamablefox.state.TrustedPlayerAccessor;
 
 @Mixin(Mob.class)
 public abstract class FoxInteractMixin {
@@ -42,6 +45,72 @@ public abstract class FoxInteractMixin {
 
         if (!trusted) {
             return;
+        }
+
+        if (player.isShiftKeyDown()) {
+
+            ItemStack handItem =
+                player.getItemInHand(hand);
+
+            ItemStack mouthItem =
+                fox.getMainHandItem();
+
+            if (
+                mouthItem.isEmpty()
+                && !handItem.isEmpty()
+            ) {
+
+                fox.setItemSlot(
+                    EquipmentSlot.MAINHAND,
+                    handItem.copyWithCount(1)
+                );
+
+                handItem.shrink(1);
+
+                ((TrustedPlayerAccessor) fox)
+                    .tamableFox$setTrustedPlayer(
+                        player.getUUID()
+                    );
+
+                cir.setReturnValue(
+                    InteractionResult.SUCCESS
+                );
+
+                return;
+            }
+
+            if (!mouthItem.isEmpty()) {
+
+                boolean added =
+                    player.getInventory()
+                        .add(
+                            mouthItem.copy()
+                        );
+
+                if (!added) {
+
+                    player.drop(
+                        mouthItem.copy(),
+                        false
+                    );
+                }
+
+                fox.setItemSlot(
+                    EquipmentSlot.MAINHAND,
+                    ItemStack.EMPTY
+                );
+
+                ((TrustedPlayerAccessor) fox)
+                    .tamableFox$setTrustedPlayer(
+                        null
+                    );
+
+                cir.setReturnValue(
+                    InteractionResult.SUCCESS
+                );
+
+                return;
+            }
         }
 
         if (!player.isShiftKeyDown()) {

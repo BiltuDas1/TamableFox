@@ -8,7 +8,8 @@
 		"FoxInteractMixin",
 		"FoxStateMixin",
     "MobAccessor",
-		"FoxHealthMixin"
+		"FoxHealthMixin",
+		"FoxDamageMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
