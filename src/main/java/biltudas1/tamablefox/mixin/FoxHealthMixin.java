@@ -1,7 +1,6 @@
 package biltudas1.tamablefox.mixin;
 
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -11,9 +10,6 @@ import net.minecraft.world.entity.animal.fox.Fox;
 
 @Mixin(Fox.class)
 public abstract class FoxHealthMixin {
-
-    @Unique
-    private boolean tamableFox$healthApplied = false;
 
     @Inject(
         method = "tick",
@@ -32,7 +28,9 @@ public abstract class FoxHealthMixin {
 
         if (
             trusted
-            && !tamableFox$healthApplied
+            && fox.getAttribute(
+                Attributes.MAX_HEALTH
+            ).getBaseValue() < 60.0D
         ) {
 
             if (
@@ -58,8 +56,6 @@ public abstract class FoxHealthMixin {
                     Attributes.ATTACK_DAMAGE
                 ).setBaseValue(6.0D);
             }
-
-            tamableFox$healthApplied = true;
         }
     }
 }
