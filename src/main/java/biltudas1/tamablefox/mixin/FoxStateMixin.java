@@ -25,10 +25,25 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor, T
     private FoxState tamableFox$state = FoxState.FOLLOW;
 
     @Unique
+    private FoxState tamableFox$previousState = FoxState.FOLLOW;
+
+    @Unique
     private BlockPos tamableFox$guardPos;
 
     @Unique
     private UUID tamableFox$trustedPlayer;
+
+    @Override
+    public FoxState tamableFox$getPreviousState() {
+        return tamableFox$previousState;
+    }
+
+    @Override
+    public void tamableFox$setPreviousState(
+        FoxState state
+    ) {
+        tamableFox$previousState = state;
+    }
 
     @Override
     public UUID tamableFox$getTrustedPlayer() {
@@ -130,6 +145,11 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor, T
             tamableFox$state.name()
         );
 
+        output.putString(
+            "TamableFoxPreviousState",
+            tamableFox$previousState.name()
+        );
+
         if (tamableFox$guardPos != null) {
 
             output.putInt(
@@ -191,6 +211,23 @@ public class FoxStateMixin implements FoxStateAccessor, GuardPositionAccessor, T
                 ) {
 
                     tamableFox$state =
+                        FoxState.FOLLOW;
+                }
+            });
+
+        input.getString("TamableFoxPreviousState")
+            .ifPresent(stateName -> {
+
+                try {
+
+                    tamableFox$previousState =
+                        FoxState.valueOf(stateName);
+
+                } catch (
+                    IllegalArgumentException e
+                ) {
+
+                    tamableFox$previousState =
                         FoxState.FOLLOW;
                 }
             });

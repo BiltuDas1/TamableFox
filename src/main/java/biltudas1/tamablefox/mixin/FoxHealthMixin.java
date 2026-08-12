@@ -63,7 +63,7 @@ public abstract class FoxHealthMixin {
             trusted
             && fox.getAttribute(
                 Attributes.MAX_HEALTH
-            ).getBaseValue() < 60.0D
+            ).getBaseValue() < 80.0D
         ) {
 
             if (
@@ -74,9 +74,9 @@ public abstract class FoxHealthMixin {
 
                 fox.getAttribute(
                     Attributes.MAX_HEALTH
-                ).setBaseValue(60.0D);
+                ).setBaseValue(80.0D);
 
-                fox.setHealth(60.0F);
+                fox.setHealth(80.0F);
             }
 
             if (

@@ -121,7 +121,6 @@ public abstract class FoxInteractMixin {
         }
 
         if (!player.isShiftKeyDown()) {
-
             FoxStateAccessor stateAccessor = (FoxStateAccessor) fox;
 
             if (stateAccessor.tamableFox$getState() == FoxState.FOLLOW) {

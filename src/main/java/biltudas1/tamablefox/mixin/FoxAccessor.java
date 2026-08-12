@@ -14,4 +14,7 @@ public interface FoxAccessor {
 
   @Invoker("getTrustedEntities")
   Stream<EntityReference<LivingEntity>> invokeGetTrustedEntities();
+
+  @Invoker("setSleeping")
+  void invokeSetSleeping(boolean sleeping);
 }

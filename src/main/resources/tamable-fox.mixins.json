@@ -11,7 +11,11 @@
 		"FoxHealthMixin",
 		"FoxDamageMixin",
 		"FoxPickupMixin",
-		"FoxGoalAccessor"
+		"FoxGoalAccessor",
+		"FoxBerryMixin",
+		"FoxEatSpeedMixin",
+		"RecoveryMixin",
+		"FoxEnemyMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
