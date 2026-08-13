@@ -12,4 +12,5 @@
 - [x] Tammed fox won't attack Chicken, Rabbits, Baby Turtle, Cod and Salmon
 - [x] If player feed fox, if the health is not full, then the fox will restore health according to the saturation of the food (round up), and if the fox picks up any food, and saw health is not full, then it will eat the food in 3 seconds, rather than 30 seconds. 
 - [x] If health is less than 25%, then it will go in sleeping animation, and heal until health recover more than 75% (All mobs will ignore the fox in this time)
-- [ ] Wild wolf won't get angry on Fox
+- [ ] Wild wolf and Polar Bear won't get angry on Fox
+- [ ] When on COMBAT mode when it will find any weapon the ground that is more powerful then current holding weapon, then it will pick it up, and store the previous item in it's hidden inventory (If it was owner item), and attack the mob using this

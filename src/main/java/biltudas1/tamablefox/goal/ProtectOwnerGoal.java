@@ -28,8 +28,15 @@ public class ProtectOwnerGoal extends Goal {
     @Override
     public boolean canUse() {
 
-        if (((FoxStateAccessor) fox)
-                .tamableFox$getState() != FoxState.GUARD) {
+        FoxState state =
+            ((FoxStateAccessor) fox)
+                .tamableFox$getState();
+
+        if (
+            state != FoxState.GUARD
+            &&
+            state != FoxState.FOLLOW
+        ) {
             return false;
         }
 
@@ -82,9 +89,15 @@ public class ProtectOwnerGoal extends Goal {
                 mob.getTarget() == owner
             ) {
 
-                ((FoxStateAccessor) fox)
-                    .tamableFox$setState(
-                        FoxState.COMBAT
+                FoxStateAccessor stateAccessor =
+                    (FoxStateAccessor) fox;
+
+                stateAccessor.tamableFox$setPreviousState(
+                    stateAccessor.tamableFox$getState()
+                );
+
+                stateAccessor.tamableFox$setState(
+                    FoxState.COMBAT
                 );
 
                 fox.setSitting(false);
@@ -121,9 +134,12 @@ public class ProtectOwnerGoal extends Goal {
     public void stop() {
         fox.setTarget(null);
 
-        ((FoxStateAccessor) fox)
-            .tamableFox$setState(
-                FoxState.GUARD
+        FoxStateAccessor stateAccessor =
+            (FoxStateAccessor) fox;
+
+        stateAccessor.tamableFox$setState(
+            stateAccessor
+                .tamableFox$getPreviousState()
         );
     }
 }
