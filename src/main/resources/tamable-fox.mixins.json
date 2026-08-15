@@ -14,8 +14,10 @@
 		"FoxGoalAccessor",
 		"FoxBerryMixin",
 		"FoxEatSpeedMixin",
-		"RecoveryMixin",
-		"FoxEnemyMixin"
+    "RecoveryMixin",
+    "FoxEnemyMixin",
+    "NeutralMobTargetMixin",
+    "TargetGoalAccessor"
 	],
 	"injectors": {
 		"defaultRequire": 1

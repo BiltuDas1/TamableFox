@@ -7,6 +7,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import biltudas1.tamablefox.state.FoxState;
 import biltudas1.tamablefox.state.FoxStateAccessor;
+import biltudas1.tamablefox.util.FoxUtil;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.animal.fox.Fox;
@@ -24,13 +25,7 @@ public abstract class RecoveryMixin {
 
         Fox fox = (Fox)(Object)this;
 
-        boolean trusted =
-            ((FoxAccessor) fox)
-                .invokeGetTrustedEntities()
-                .findAny()
-                .isPresent();
-
-        if (!trusted) {
+        if (!FoxUtil.isTamedFox(fox)) {
             return;
         }
 
@@ -123,6 +118,17 @@ public abstract class RecoveryMixin {
 
                 ((FoxAccessor)fox)
                     .invokeSetSleeping(false);
+
+                fox.addEffect(
+                    new MobEffectInstance(
+                        MobEffects.RESISTANCE,
+                        20 * 15,
+                        2,
+                        false,
+                        true,
+                        true
+                    )
+                );
 
                 stateAccessor.tamableFox$setState(
                     stateAccessor

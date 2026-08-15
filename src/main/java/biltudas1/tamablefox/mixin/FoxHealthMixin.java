@@ -6,6 +6,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import biltudas1.tamablefox.util.FoxUtil;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.animal.fox.Fox;
 
@@ -14,6 +15,9 @@ public abstract class FoxHealthMixin {
 
     @Unique
     private boolean tamableFox$huntGoalsRemoved = false;
+
+    @Unique
+    private boolean tamableFox$avoidanceGoalsRemoved = false;
 
     @Inject(
         method = "tick",
@@ -24,11 +28,7 @@ public abstract class FoxHealthMixin {
     ) {
         Fox fox = (Fox)(Object)this;
 
-        boolean trusted =
-            ((FoxAccessor) fox)
-                .invokeGetTrustedEntities()
-                .findAny()
-                .isPresent();
+        boolean trusted = FoxUtil.isTamedFox(fox);
 
         if (
             trusted
@@ -57,6 +57,19 @@ public abstract class FoxHealthMixin {
                 );
 
             tamableFox$huntGoalsRemoved = true;
+        }
+
+        if (
+            trusted
+            && !tamableFox$avoidanceGoalsRemoved
+        ) {
+            ((MobAccessor) fox)
+                .getGoalSelector()
+                .removeAllGoals(goal ->
+                    goal.getClass().getSimpleName().equals("AvoidEntityGoal")
+                );
+
+            tamableFox$avoidanceGoalsRemoved = true;
         }
 
         if (
