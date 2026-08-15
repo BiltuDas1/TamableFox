@@ -13,6 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import biltudas1.tamablefox.util.FoxUtil;
+
 @Mixin(Animal.class)
 public abstract class FoxBerryMixin {
 
@@ -28,6 +30,10 @@ public abstract class FoxBerryMixin {
     ) {
 
         if (!((Object) this instanceof Fox fox)) {
+            return;
+        }
+
+        if (!FoxUtil.isTamedFox(fox)) {
             return;
         }
 
